@@ -1,0 +1,4 @@
+﻿setuptools<82.0.0
+requests~=2.34.2
+poulpy~=1.2.13
+xlsxwriter~=3.2.9
