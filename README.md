@@ -1,6 +1,9 @@
 # Install
 To install this package, use:  
 	`pip install classresults`
+This package needs poulpy, to install poulpy do:  
+	`pip install poulpy --index-url https://gitlab.cri.epita.fr/api/v4/projects/8706/packages/pypi/simple`
+For more information on poulpy, see https://docs.forge.epita.fr/services/poulpy
 
 # Usage
 The list of students should be stored in the `STUDENTS` environement variable. It is a space seperated list of the logins.  

@@ -1,6 +1,6 @@
 [project]
 name = "classresults"
-version = "0.2.5"
+version = "0.2.6"
 description = ""
 authors = [
     {name = "Thomas BOBEE",email = "thomasbobe3@gmail.com"}
@@ -13,7 +13,6 @@ dependencies = [
     "setuptools (>=80.0.0,<81.0.0)",
     "xlsxwriter (>=3.2.9,<4.0.0)",
     "click (>=8.5.0,<9.0.0)",
-    "poulpy @ https://gitlab.cri.epita.fr/api/v4/projects/8706/packages/pypi/files/9a85510688cadb175346ae0e3012d97123bfe9c5a91b99429f28fa9b54dc916d/poulpy-1.2.13.tar.gz#sha256=9a85510688cadb175346ae0e3012d97123bfe9c5a91b99429f28fa9b54dc916d"
 ]
 
 [tool.poetry.scripts]
