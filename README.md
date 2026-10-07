@@ -8,6 +8,6 @@ To use the command, do `STUDENTS="<logins>" && classresults <activty code>` or
 ```
 export STUDENTS="<logins>""
 classresults <activity code>
-```.  
+```
 This will create a `students.xlsx` file with all the data.
 
