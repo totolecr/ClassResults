@@ -17,7 +17,7 @@ def main(activity: str):
 
     STUDENTS = os.getenv("STUDENTS")
     if STUDENTS is None:
-        printf("STUDENTS environement variable MUST not be empty, it should contain the list of students' login seperated by spaces")
+        print("STUDENTS environement variable MUST not be empty, it should contain the list of students' login seperated by spaces")
         sys.exit(2)
     
     students = STUDENTS.split(' ');
