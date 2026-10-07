@@ -4,7 +4,7 @@ To install this package, use:
 
 # Usage
 The list of students should be stored in the `STUDENTS` environement variable. It is a space seperated list of the logins.  
-To use the command, do `STUDENTS="<logins>" && classresults <activty code>` or 
+To use the command, do `STUDENTS="<logins>" classresults <activty code>` or 
 ```
 export STUDENTS="<logins>"
 classresults <activity code>
