@@ -1,6 +1,6 @@
 [project]
 name = "classresults"
-version = ["version"]
+version = "0.2.2"
 description = ""
 authors = [
     {name = "Thomas BOBEE",email = "thomasbobe3@gmail.com"}
