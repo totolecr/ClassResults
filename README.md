@@ -11,3 +11,6 @@ classresults <activity code>
 ```
 This will create a `students.xlsx` file with all the data.
 
+# Source
+This package is my github: https://github.com/totolecr/ClassResults
+
