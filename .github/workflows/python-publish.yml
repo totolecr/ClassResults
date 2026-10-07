@@ -31,7 +31,7 @@ jobs:
           # NOTE: put your own distribution build steps here.
           python -m pip install poetry
           python -m poetry install
-          python -m pip install poulpy --from-index https://gitlab.cri.epita.fr/api/v4/projects/8706/packages/pypi/simple
+          python -m pip install poulpy --index-url https://gitlab.cri.epita.fr/api/v4/projects/8706/packages/pypi/simple
           python -m poetry build
 
       - name: Upload distributions
