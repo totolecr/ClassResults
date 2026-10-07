@@ -1,70 +1,13 @@
-﻿from typing import Any
-
+﻿import asyncio
+import json
+import mounette
 import requests
-import poulpy
-import csv
-
 import xlsxwriter
 
-def get_jwt() -> str:
-    """
-    Returns a jwt token using poulpy
-    """
-    return poulpy.get_credentials(poulpy.DefaultProfiles[poulpy.DefaultProfiles.prod.name].value).jwt
-
-def get_raw_data(activity: str, jwt: str) -> list[dict[str, Any]]:
-    """
-    Gets the trace data from the operator's api
-    :param activity: The activity code to get the data from (format: prog-<bimester>-p-<tp number>-<year>)
-    :param jwt: the jwt token
-    :return: The json formated trace data
-    """
-    url = (f"https://operator.forge.epita.fr/api/traces/epita-prepa-computer-science%2F{activity}/explore?pageNum=0&"
-           f"pageSize=100&published=true&submissionDefinitionUri=epita-prepa-computer-science%2F{activity}%2Froot%2F"
-           f"{activity}%2Fsubmit&submissionStatus=SUCCEEDED")
-    headers = {"Accept": "application/json", "Authorization": f"Bearer {jwt}"}
-
-    print("Sending request to operator's api")
-    response = requests.get(url, headers=headers)
-    if response.status_code != 200:
-        raise Exception(f"Invalid response: {response.status_code}")
-
-    json = response.json()
-    traces: list = json["results"]
-    pages = json["pageCount"]
-    print(f"Got: {pages} to load")
-    print("Loaded page number 1")
-    for i in range(1, pages):
-        url = (f"https://operator.forge.epita.fr/api/traces/epita-prepa-computer-science%2F{activity}/explore?"
-               f"pageNum={i}&pageSize=100&published=true&submissionDefinitionUri=epita-prepa-computer-science%2F"
-               f"{activity}%2Froot%2F{activity}%2Fsubmit&submissionStatus=SUCCEEDED")
-        response = requests.get(url, headers=headers)
-        if response.status_code != 200:
-            raise Exception(f"Invalid response: {response.status_code}")
-
-        traces.extend(response.json()["results"])
-        print(f"Loaded page number {i + 1}")
-
-    print("Finished loading traces")
-    return traces
-
-
-def filter_class(data: list[dict[str, Any]], students) -> list[dict[str, Any]]:
-    """
-    Filters data according to students' login
-    :param data: The data to filter
-    :param students: The logins to keep
-    :return: The filtered data
-    """
-    filtered_data = []
-    for trace in data:
-        if trace["author"] in students and trace["author"] not in map(lambda d: d["author"], filtered_data):
-            filtered_data.append(trace)
-
-    print(f"Got trace data for {len(filtered_data)} students out of {len(students)}")
-
-    return filtered_data
-
+from mounette.modules.operator_api import fetch_traces
+from mounette.config.models.operator_api import ActivityQueryParams
+from mounette.modules.stats import get_activity_uri, create_filter
+from typing import Any
 
 def recreate_trace_url(activity: str, id: str) -> str:
     """
@@ -107,17 +50,6 @@ def add_unsubmitted_students(traces: list[list], students: list[str]) -> list[li
     traces.sort(key=lambda r: r[0])
     print(f"Added {len(traces) - len(logins)} students that did not submit")
     return traces
-
-
-def to_csv(traces, filename):
-    """
-    Saves the data to a csv file
-    """
-    with open(filename, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["login", "percent", "operator url", "impersonate url"])
-        writer.writerows(traces)
-
 
 def to_xlsx(traces, filename):
     workbook = xlsxwriter.Workbook(filename)
@@ -188,8 +120,12 @@ def to_xlsx(traces, filename):
 
 
 def get_data(activity: str, students: list[str]):
-    raw = get_raw_data(activity, get_jwt())
-    filtered = filter_class(raw, students)
+    activity_uri = get_activity_uri(activity)
+    params = ActivityQueryParams()
+    data = asyncio.run(fetch_traces(activity_uri, params))
+    filter = create_filter("submit", ",".join(students), None)
+    filtered = [d for d in data if filter(d)]
+    filtered_json = json.dumps(filtered)
     traces = to_student_trace(filtered, activity)
     traces = add_unsubmitted_students(traces, students)
     to_xlsx(traces, "students.xlsx")
