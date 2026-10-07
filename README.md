@@ -1,7 +1,11 @@
 # Install
 To install this package, use:  
-	`pip install ClassResults --index-url https://github.com/totolecr/ClassResults.git`
+	`pip install classresults`
 
 # Usage
-To use the command, do `ClassResults <activty-code>`.  
-You may need to modify the 'students' variable in the __main__.py file.
+The list of students should be stored in the `STUDENTS` environement variable. It is a space seperated list of the logins.  
+To use the command, do `STUDENTS="<logins>" && classresults <activty code>` or ```bash
+export STUDENTS="<logins>"
+classresults <activity code>```.  
+This will create a `students.xlsx` file with all the data.
+
